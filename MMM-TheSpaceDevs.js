@@ -11,6 +11,7 @@ Module.register('MMM-TheSpaceDevs', {
     width: 600,
     headerText: 'Upcoming Launches',
     apiBase: 'https://ll.thespacedevs.com/2.2.0/launch/upcoming/?format=json',
+    timeZone: 'UTC',
   },
 
   getTemplate() {
@@ -91,11 +92,12 @@ Module.register('MMM-TheSpaceDevs', {
     const launches = this.launch.results.slice(0, 6).map((launch) => {
       const rocket = launch.rocket.configuration.name;
       const status = launch.status.abbrev;
-      const date = formatDate(launch.net, launch.status.abbrev);
+      const date = formatDate(launch.net, launch.status.abbrev, this.config.timeZone);
       const window = formatLaunchWindow(
         launch.window_start,
         launch.window_end,
-        status
+        status,
+        this.config.timeZone
       );
 
       return {
