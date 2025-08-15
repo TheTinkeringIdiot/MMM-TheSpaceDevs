@@ -4,7 +4,7 @@ Module.register('MMM-TheSpaceDevs', {
     updateInterval: (60 * 60 * 1000) / 15,
     animationSpeed: 500,
     lang: config.language,
-    records: 5,
+    records: 8,
     type: 'table',
     locationIds: [],
     apiKey: '',
@@ -161,7 +161,10 @@ Module.register('MMM-TheSpaceDevs', {
   },
 
   fetchLaunchData() {
-    const url = `${this.config.apiBase}&limit=${this.config.records}&ordering=net${getLocationIds(this.config.locationIds)}`;
+    const nowIso = moment().toISOString();
+    const url = `${this.config.apiBase}&limit=${this.config.records}&net__gte=${encodeURIComponent(
+      nowIso
+    )}&ordering=net${getLocationIds(this.config.locationIds)}`;
 
     const self = this;
     this.error = '';
@@ -205,7 +208,21 @@ Module.register('MMM-TheSpaceDevs', {
   },
 
   processLaunch(data) {
-    this.launch = data;
+    // Ensure we display the next upcoming launches (future nets), regardless of API ordering.
+    if (!data || !Array.isArray(data.results)) {
+      this.launch = data;
+      this.updateDom(this.config.animationSpeed);
+      return;
+    }
+
+    const now = new Date();
+    const upcoming = data.results
+      .filter((l) => l && l.net && new Date(l.net) >= now)
+      .sort((a, b) => new Date(a.net) - new Date(b.net))
+      .slice(0, this.config.records);
+
+    // Preserve metadata but replace results with the processed upcoming list
+    this.launch = Object.assign({}, data, { results: upcoming });
     this.updateDom(this.config.animationSpeed);
   },
 
