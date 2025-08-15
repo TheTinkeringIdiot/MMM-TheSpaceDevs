@@ -10,7 +10,7 @@ Module.register('MMM-TheSpaceDevs', {
     apiKey: '',
     width: 600,
     headerText: 'Upcoming Launches',
-    apiBase: 'https://ll.thespacedevs.com/2.2.0/launch/upcoming/?format=json',
+    apiBase: 'https://ll.thespacedevs.com/2.3.0/launches/?format=json',
     timeZone: 'UTC',
   },
 
@@ -161,9 +161,7 @@ Module.register('MMM-TheSpaceDevs', {
   },
 
   fetchLaunchData() {
-    const url = `${this.config.apiBase}&limit=${
-      this.config.records
-    }${getLocationIds(this.config.locationIds)}`;
+    const url = `${this.config.apiBase}&limit=${this.config.records}&ordering=net${getLocationIds(this.config.locationIds)}`;
 
     const self = this;
     this.error = '';
@@ -207,9 +205,6 @@ Module.register('MMM-TheSpaceDevs', {
   },
 
   processLaunch(data) {
-    if (data && data.results && Array.isArray(data.results)) {
-      data.results.sort((a, b) => new Date(a.net) - new Date(b.net));
-    }
     this.launch = data;
     this.updateDom(this.config.animationSpeed);
   },
