@@ -10,7 +10,7 @@ Module.register('MMM-TheSpaceDevs', {
     apiKey: '',
     width: 600,
     headerText: 'Upcoming Launches',
-    apiBase: 'https://ll.thespacedevs.com/2.3.0/launches/?format=json',
+    apiBase: 'https://lldev.thespacedevs.com/2.3.0/launches/?format=json',
     timeZone: 'UTC',
   },
 
