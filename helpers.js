@@ -37,6 +37,6 @@ const formatDate = (isoDate, status, timeZone) => {
 
 const getLocationIds = (locations) => {
   return locations.length > 0
-    ? locations.map((location) => `&location__ids=${location}`).join('')
+    ? `&location__ids=${locations.join(',')}`
     : '';
 };
