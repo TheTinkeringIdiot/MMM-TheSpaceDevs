@@ -89,7 +89,7 @@ Module.register('MMM-TheSpaceDevs', {
       };
     }
 
-    const launches = this.launch.results.slice(0, 6).map((launch) => {
+    const launches = this.launch.results.slice(0, this.config.records).map((launch) => {
       const rocket = launch.rocket.configuration.name;
       const status = launch.status.abbrev;
       const date = formatDate(launch.net, launch.status.abbrev, this.config.timeZone);
@@ -136,7 +136,7 @@ Module.register('MMM-TheSpaceDevs', {
     const upcomingLaunch = {
       rocket: launch.rocket.configuration.name,
       image: launch.image,
-      date: moment(launch.next).format(),
+      date: moment(launch.net).format(),
       hours: this.hours,
       days: this.days,
       minutes: this.minutes,
@@ -207,6 +207,9 @@ Module.register('MMM-TheSpaceDevs', {
   },
 
   processLaunch(data) {
+    if (data && data.results && Array.isArray(data.results)) {
+      data.results.sort((a, b) => new Date(a.net) - new Date(b.net));
+    }
     this.launch = data;
     this.updateDom(this.config.animationSpeed);
   },
