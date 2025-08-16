@@ -162,7 +162,7 @@ Module.register('MMM-TheSpaceDevs', {
 
   fetchLaunchData() {
     const nowIso = moment().toISOString();
-    const url = `${this.config.apiBase}&limit=${this.config.records}`;
+    const url = `${this.config.apiBase}&limit=${this.config.records}${getLocationIds(this.config.locationIds)}`;
 
     const self = this;
     this.error = '';
